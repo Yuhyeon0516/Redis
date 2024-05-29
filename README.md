@@ -1,6 +1,6 @@
 # Redis
 
-인메모리 Database의 대표적인 Redis에 대한 공부를 하면서 적어둔 일기장입니다.
+In Memory Database의 대표적인 Redis에 대한 공부를 하면서 적어둔 일기장입니다.
 
 ## 시작하기에 앞서
 
@@ -26,3 +26,75 @@ Redis를 설치하고 실행하는 방법에는 크게 두가지가 있다.
 2. `redis-server` 명령어로 Redis server를 실행
 3. `redis-cli` 명령어를 통해 Redis 접속
 4. `brew services stop redis` or `redis-cli shutdown` 명령어로 필요 시 Redis 종료
+
+### 자주 사용하는 쿼리
+
+쿼리 명령어가 꽤나 많으니 아래 공식문서를 참고하여 사용하면 될 것 같다.  
+https://redis.io/docs/latest/commands/
+
+- Settters
+
+  - `SET <key> <value>`
+
+    - 에시: `SET message 'hi there!'`
+      - message라는 key에 'hi there!'의 value를 저장
+    - 옵션
+      - `EX <seconds>`: 만료 시간을 초 단위로 지정
+      - `PX <milliseconds>`: 만료 시간을 밀리초 단위로 지정
+      - `EXAT <timestamp-seconds>`: 만료 시간을 유닉스 타임스탬프 초로 지정
+      - `PXAT <timestamp-milliseconds>`: 만료 시간을 유닉스 타임스탬프 밀리초로 지정
+      - `NX`: 키가 존재하지 않을때만 실행
+      - `XX`: 키가 존재할때 실행
+      - `KEEPTTL`: 만료 시간을 유지
+      - `GET`: 키가 가지고 있던 값을 가져옴. 키가 없다면 nil을 반환하고, 키에 값이 없다면 오류를 반환함.
+
+  - `SETNX`
+    - `SET` 명령어에 `NX` 옵션을 더한것과 같음
+  - `SETEX`
+    - `SET` 명령어에 `EX` 옵션을 더한것과 같음
+  - `MSET`
+    - `SET` 명령어를 반복해서 호출
+    - 예시: `MSET color red model toyota`
+      - color key에 red value를 넣고 model key에 toyota value를 넣음
+  - `MSETNX`
+
+    - `MSET` 명령어에 `NX` 옵션을 더한것과 같음
+
+  - `SETRANGE <key> <index> <string>`
+    - key에 들어있는 value의 index부터 string으로 변경함
+    - 예시: `SETRANGE model 2 blue`를 진행 시 model key의 값이 'toyota'라면 'toblue'로 변경함
+
+- Getters
+
+  - `GET <key>`
+
+    - 예시: `GET message`
+      - message라는 key의 value를 가져옴
+
+  - `MGET`
+
+    - `GET` 명령어를 반복해서 호출
+    - 예시: `MGET color model`
+      - color key의 value와 model key의 value를 array로 가져옴
+
+  - `GETRANGE <key> <start_index> <last_index>`
+
+    - key에 들어있는 value를 start_index ~ last_index까지의 value만 가져옴
+    - 예시: `GETRANGE model 0 2`를 진행 시 model key에 value가 'toyota'라면 'toy'만 가져옴
+
+  - `INCRBY <key> <number>`
+
+    - key에 들어있는 number형태의 value에 number를 더한 값을 돌려줌
+
+  - `DECRBY <key> <number>`
+
+    - key에 들어있는 number형태의 value에 number를 뺀 값을 돌려줌
+
+  - `INCRBYFLOAT <key> <float>`
+    - key에 들어있는 number 또는 float형태의 value에 float을 더한 값을 돌려줌
+    - 빼고싶으면 `<float>` 값을 음수로 주면됨
+
+- Delete
+
+  - `DEL <key>`
+    - key를 삭제함
