@@ -98,3 +98,5 @@ https://redis.io/docs/latest/commands/
 
   - `DEL <key>`
     - key를 삭제함
+
+### 이커머스 앱 실습(./rbay)
